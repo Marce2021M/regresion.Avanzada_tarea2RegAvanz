@@ -7,7 +7,7 @@ jagsModel <- setClass(
     data = "list",
     inits = "function",
     parms = "character",
-    model.file = "textConnection",
+    model.fileText = "character",
     n.iter = "numeric",
     n.chains = "numeric",
     n.burnin = "numeric",
@@ -22,11 +22,11 @@ jagsModel <- setClass(
     data = NULL,
     inits = NULL,
     parms = NULL,
-    model.file = NULL,
-    n.iter = 50000,
-    n.chains = 2,
-    n.burnin = 5000,
-    n.thin = 1,
+    model.fileText = NULL,
+    n.iter = NULL,
+    n.chains = NULL,
+    n.burnin = NULL,
+    n.thin = NULL,
     modelSim = NULL,
     outModelSim = NULL,
     graphModelSim = NULL,
@@ -39,11 +39,11 @@ jagsModel <- setClass(
 setMethod(
   "initialize",
   "jagsModel",
-  function(.Object, data, inits, parms, model.file, n.iter=50000, n.chains=2, n.burnin=5000, n.thin=1) {
+  function(.Object, data, inits, parms, model.fileText, n.iter=5000, n.chains=2, n.burnin=500, n.thin=1) {
     .Object@data <- data
     .Object@inits <- inits
     .Object@parms <- parms
-    .Object@model.file <- model.file
+    .Object@model.fileText <- model.fileText
     .Object@n.iter <- n.iter
     .Object@n.chains <- n.chains
     .Object@n.burnin <- n.burnin
@@ -62,15 +62,17 @@ setGeneric("runJagsModel", function(.Object, ...) {
 setMethod(
   f="runJagsModel",
   signature = "jagsModel",
-  definition <- function(.Object) {
+  function(.Object) {
     require('R2jags')
-    .Object@modelSim <- jags(model.file=.Object@model.file, data = .Object@data, parameters.to.sav=.Object@parms, inits = .Object@inits, n.chains = .Object@n.chains, n.burnin=.Object@n.burnin, thin=.Object@n.thin)
+
+    .Object@modelSim <- jags(model.file=textConnection(.Object@model.fileText) , data = .Object@data, parameters.to.sav=.Object@parms, inits = .Object@inits, n.chains = .Object@n.chains, n.burnin=.Object@n.burnin, n.thin=.Object@n.thin)
     
     .Object@outModelSim <- .Object@modelSim$BUGSoutput$sims.list
     .Object@graphModelSim <- .Object@modelSim$BUGSoutput$sims.array
     .Object@summModel <- .Object@modelSim$BUGSoutput$summary
     .Object@dicModel <- .Object@modelSim$BUGSoutput$DIC
-    return(.Object)
+    
+    #print("Ha terminado de crear la cadena")
   }
 )
 
