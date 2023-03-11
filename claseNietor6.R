@@ -90,16 +90,19 @@ jagsModel <- R6Class("jagsModel",
 
 canvaMortalidad <- function(){
   #mortality<-read.table("http://gente.itam.mx/lnieto/index_archivos/mortality.txt",header=TRUE)
+  out.yf1<-ej5a.sim$summModel[grep("yf1",rownames(ej5a.sim$summModel)),]  #especial
+  or<-order(mortality$x)
+  ymin<-min(mortality$y,out.yf1[,c(1,3,7)])
+  ymax<-max(mortality$y,out.yf1[,c(1,3,7)])
+
   par(mfrow=c(1,1))
   plot(mortality$x,mortality$y,ylim=c(ymin,ymax))
 
 }
 
 mortalidadGraf <- function(modelo, col=1){
-  out.yf1<-modelo$summModel[grep("yf1",rownames(modelo$summModel)),]
   or<-order(mortality$x)
-  ymin<-min(mortality$y,out.yf1[,c(1,3,7)])
-  ymax<-max(mortality$y,out.yf1[,c(1,3,7)])
+  out.yf1<-modelo$summModel[grep("yf1",rownames(modelo$summModel)),]  #especial
 
   lines(mortality$x[or],out.yf1[or,1],lwd=2,col=col)
   lines(mortality$x[or],out.yf1[or,3],lty=2,col=col)
