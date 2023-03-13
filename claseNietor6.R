@@ -108,3 +108,26 @@ mortalidadGraf <- function(modelo, col=1){
   lines(mortality$x[or],out.yf1[or,3],lty=2,col=col)
   lines(mortality$x[or],out.yf1[or,7],lty=2,col=col)
 }
+
+sextoGrafPred <- function(model){
+  out.yf<-model$summModel[grep("yf1",rownames(model$summModel)),]
+  ymin<-min(desastres[,2],out.yf[,c(1,3,7)])
+  ymax<-max(desastres[,2],out.yf[,c(1,3,7)])
+
+  par(mfrow=c(1,1))
+  plot(desastres,type="l",col="grey80",ylim=c(ymin,ymax))
+  lines(desastres[,1],out.yf[,1],lwd=2,col=2)
+  lines(desastres[,1],out.yf[,3],lty=2,col=2)
+  lines(desastres[,1],out.yf[,7],lty=2,col=2)
+  lines(desastres[,1],out.yf[,5],lwd=2,col=4)
+}
+
+sextoGrafMedia <- function(model){
+  out.mu<-model$summModel[grep("mu",rownames(model$summModel)),]
+  par(mfrow=c(1,1))
+  plot(desastres,type="l",col="grey80")
+  lines(desastres[,1],out.mu[,1],lwd=2,col=2)
+  lines(desastres[,1],out.mu[,3],lty=2,col=2)
+  lines(desastres[,1],out.mu[,7],lty=2,col=2)
+
+}
